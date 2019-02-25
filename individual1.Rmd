@@ -1,0 +1,76 @@
+---
+title: "individual1"
+author: Brad Gannon
+output: html_document
+---
+
+Load the data, view head, clean
+```{r}
+HAPPY <- readRDS('HAPPY.rds')
+head(HAPPY, 5)
+HAPPY[HAPPY == "IAP"] <- NA
+HAPPY[HAPPY == "DK"] <- NA
+HAPPY[HAPPY == "NA"] <- NA
+head(HAPPY, 5) # shows "IAP" is now <NA>
+```
+Explore the data
+
+##1. Distributions of 2 different variables
+
+```{r}
+library("ggplot2")
+
+# Show distributions of PARTYID via Density Plot, need to remove NA values
+data <- HAPPY[!is.na(HAPPY$PARTYID),]
+
+p <- ggplot(data, aes(PARTYID, color=PARTYID, fill=PARTYID)) + geom_density(alpha=0.3)
+p <- p + theme(axis.text.x = element_text(angle = 45, hjust=1))
+p <- p + ggtitle("Densities of People per Political Party") + theme(plot.title = element_text(hjust=0.5))
+p
+```
+
+```{r}
+# Show distrubutions of DEGREE via Pie Chart, need to remove NA values
+data <- HAPPY[!is.na(HAPPY$DEGREE),]
+library(scales) # to show percentages
+
+p <- ggplot(data, aes(x="", fill=DEGREE)) + geom_bar(width=1) + coord_polar("y")
+p <- p + theme(axis.text.x=element_blank()) + xlab("") + ylab("")
+p <- p + ggtitle("Proportions of Degrees") + theme(plot.title = element_text(hjust=0.5))
+p
+```
+
+##2. Investigate the relationship between happiness and three other variables in the data
+
+```{r}
+# Happiness versus Year
+
+data <- HAPPY[!is.na(HAPPY$HAPPY),] # Do not want to show NA values here
+
+p <- ggplot(data, aes(x=HAPPY, y=YEAR, fill=HAPPY)) + geom_violin(trim=FALSE) + xlab("") # X-axis labels are self explanatory here
+p <- p + ggtitle("Densities and Distributions of Happiness vs. Year") + theme(plot.title = element_text(hjust=0.5))
+p
+```
+
+```{r}
+# Happiness versus Sex
+
+data <- HAPPY[!is.na(HAPPY$SEX),] # Do not want to show NA values here
+
+p <- ggplot(data, aes(x=HAPPY, y=HAPPY, fill=SEX)) + geom_bar(stat="identity")
+p <- p + ylab("Count (by Sex)") + theme(axis.text.y=element_blank()) + xlab("Happiness Level")
+p <- p + ggtitle("Happiness Level by Sex") + theme(plot.title = element_text(hjust=0.5))
+p
+```
+
+```{r}
+# Happiness versus Degree
+data <- HAPPY[!is.na(HAPPY$DEGREE),] # Do not want to show NA values here
+
+p <- ggplot(data, aes(x=HAPPY, y=HAPPY, fill=DEGREE)) + geom_bar(stat="identity") + coord_flip()
+p <- p + ylab("Count (by Degree)") + theme(axis.text.x=element_blank()) + xlab("")
+p <- p + ggtitle("Happiness Level by Degree") + theme(plot.title = element_text(hjust=0.5))
+p
+```
+
+From the graphs I made and explored, it is easy to see that roughly half of the respondents to this survey had a High School degree, with approximately a third having a Bachelor or Graduate degree. When looking at happiness, first when compared to year, the distributions are pretty similar. However, the bulk densities of happiness took place from about 1980-2000, and have since kind of tapered off. Looking at happiness versus gender, it seems to me that people who consider themselves happy have a higher chance of being female than male, while those not happy are equally split between genders. Lastly, happiness being compared to degree level shows some interesting aspects, as the largest representation for each degree category was in a category that was overall happy. In all, I think this data implies that people are generally happy.
