@@ -4,8 +4,43 @@ author: Brad Gannon, Seydou Yacouba
 output: html_document
 ---
 
-##1.
+Load the data, view head, clean
+```{r}
+HAPPY <- readRDS('HAPPY.rds')
+head(HAPPY, 5)
+HAPPY[HAPPY == "IAP"] <- NA
+HAPPY[HAPPY == "DK"] <- NA
+HAPPY[HAPPY == "NA"] <- NA
+head(HAPPY, 5) # shows "IAP" is now <NA>
+```
+
+##1. (Brad Gannon)
+
+```{r}
+library("ggplot2")
+
+# Show distributions of PARTYID via Density Plot, need to remove NA values
+data <- HAPPY[!is.na(HAPPY$PARTYID),]
+
+p <- ggplot(data, aes(PARTYID, color=PARTYID, fill=PARTYID)) + geom_density(alpha=0.3)
+p <- p + theme(axis.text.x = element_text(angle = 45, hjust=1))
+p <- p + ggtitle("Densities of People per Political Party") + theme(plot.title = element_text(hjust=0.5))
+p
+```
+
+```{r}
+# Show distrubutions of DEGREE via Pie Chart, need to remove NA values
+data <- HAPPY[!is.na(HAPPY$DEGREE),]
+library(scales) # to show percentages
+
+p <- ggplot(data, aes(x="", fill=DEGREE)) + geom_bar(width=1) + coord_polar("y")
+p <- p + theme(axis.text.x=element_blank()) + xlab("") + ylab("")
+p <- p + ggtitle("Proportions of Degrees") + theme(plot.title = element_text(hjust=0.5))
+p
+```
 
 ##2.
 
-##3.
+##3. (Brad Gannon)
+
+From the graphs I made and explored, it is easy to see that roughly half of the respondents to this survey had a High School degree, with approximately a third having a Bachelor or Graduate degree. When looking at happiness, first when compared to year, the distributions are pretty similar. However, the bulk densities of happiness took place from about 1980-2000, and have since kind of tapered off. Looking at happiness versus gender, it seems to me that people who consider themselves happy have a higher chance of being female than male, while those not happy are equally split between genders. Lastly, happiness being compared to degree level shows some interesting aspects, as the largest representation for each degree category was in a category that was overall happy. In all, I think this data implies that people are generally happy.
