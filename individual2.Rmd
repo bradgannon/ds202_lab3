@@ -1,0 +1,78 @@
+---
+title: "individual2.Rmd"
+author: "Seydou Yacouba"
+date: "February 26, 2019"
+output: html_document
+---
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(classdata)
+```
+
+
+
+```{r}
+HAPPY <- readRDS("HAPPY.rds")
+head(HAPPY)
+```
+```{r}
+#1
+HAPPY <- HAPPY %>% mutate(DEGREE = replace(DEGREE, DEGREE %in% c("NA", "DK", "IAP"), NA),
+                          HAPPY = replace(HAPPY, HAPPY %in% c("NA", "DK", "IAP"), NA),
+                          AGE = replace(AGE, AGE %in% c("NA", "DK", "IAP"), NA),
+                          MARITAL = replace(MARITAL, MARITAL %in% c("NA", "DK", "IAP"), NA),
+                          HEALTH = replace(HEALTH, HEALTH %in% c("NA", "DK", "IAP"), NA),
+                          FINRELA = replace(FINRELA, FINRELA %in% c("NA", "DK", "IAP"), NA))
+```
+
+```{r}
+#2
+HAPPY <- HAPPY %>%
+
+  mutate(
+
+  AGE = replace(AGE, AGE == "89 OR OLDER", 89),
+
+  AGE = as.numeric(AGE),
+
+  DEGREE = factor(DEGREE),
+
+  SEX = factor(SEX),
+
+  MARITAL = factor(MARITAL),
+
+  HEALTH = factor(HEALTH),
+
+  FINRELA = factor(FINRELA)
+
+)
+```
+
+
+```{r}
+#3
+levels(HAPPY$DEGREE) <- c(
+
+      "LT HIGH SCHOOL",
+
+      "HIGH SCHOOL",
+
+      "JUNIOR COLLEGE",
+
+      "BACHELOR",
+
+      "GRADUATE")
+
+levels(HAPPY$SEX) <- c("MALE", "FEMALE")
+
+levels(HAPPY$MARITAL) <- c("NEVER MARRIED", "MARRIED", "SEPARATED", "DIVORCED", "WIDOWED")
+
+levels(HAPPY$HEALTH) <- c("POOR", "FAIR", "GOOD", "EXCELLENT")
+
+levels(HAPPY$FINRELA) <- c("FAR ABOVE AVERAGE","ABOVE AVERAGE", "AVERAGE", "BELOW AVERAGE", "FAR BELOW AVERAGE")
+
+```
+
+
